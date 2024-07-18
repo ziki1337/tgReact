@@ -1,10 +1,62 @@
+import { useEffect, useState } from 'react';
 import './Form.css'
+import { useTelegram } from '../../hooks/useTelegram';
 
 const Form = () => {
 
+    const [country, setCountry] = useState('');
+    const [city, setCity] = useState('');
+    const [subject, setSubject] = useState('physical');
+    const {tg} = useTelegram();
+
+    useEffect(() => {
+        tg.Mainbutton.setParams({
+            text: 'Отправить данные'
+        })
+    }, [])
+
+    useEffect(() => {
+        if(!city || !country) 
+        {
+            tg.Mainbutton.hide();
+        }
+        else 
+        {
+            tg.Mainbutton.show();
+        }
+    }, [country, city])
+
+    const onChangeCountry = (e) => {
+        setCountry(e.target.value)
+    }
+    const onChangeCity = (e) => {
+        setCity(e.target.value)
+    }
+    const onChangeSubject = (e) => {
+        setSubject(e.target.value)
+    }
+
     return (
-        <div>
-            Form
+        <div className={'form'}>
+            <h3>Введите ваши данные</h3>
+            <input 
+            className={'input'} 
+            type='text' 
+            placeholder={'Страна'} 
+            value={country}
+            onChange={onChangeCountry}
+            />
+            <input 
+            className={'input'} 
+            type='text' 
+            placeholder={'Город'}
+            value={city}
+            onChange={onChangeCity} 
+            />
+            <select className={'select'} value={subject} onChange={onChangeSubject}> 
+                <option value={'physical'}>Физ. лицо</option>
+                <option value={'legal'}>Физ. лицо</option>
+            </select>
         </div>
     );
 }
